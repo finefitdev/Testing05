@@ -1,885 +1,1406 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Finefit</title>
-<meta name="description" content="Finefit — projects, socials, games." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;700;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --bg: #050505;
-    --bg-2: #0a0a0a;
-    --fg: #ffffff;
-    --dim: rgba(255, 255, 255, 0.55);
-    --dimmer: rgba(255, 255, 255, 0.22);
-    --line: rgba(255, 255, 255, 0.08);
-    --line-2: rgba(255, 255, 255, 0.16);
-    --glow-strong: 0 0 28px rgba(255, 255, 255, 0.55), 0 0 60px rgba(255, 255, 255, 0.25);
-    --glow: 0 0 16px rgba(255, 255, 255, 0.45);
-    --glow-soft: 0 0 8px rgba(255, 255, 255, 0.3);
-    --cursor-x: 50%;
-    --cursor-y: 50%;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finefit</title>
+  <meta name="description" content="Finefit — developer portfolio. Projects, socials, games." />
+  <meta property="og:title" content="Finefit">
+  <meta property="og:description" content="Self-taught developer portfolio, projects, socials, and games.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://finefit.dev">
+  <meta property="og:image" content="https://finefit.dev/banner.png">
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html, body {
-    height: 100%;
-    background: var(--bg);
-    color: var(--fg);
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  body {
-    background:
-      radial-gradient(circle 600px at var(--cursor-x) var(--cursor-y), rgba(255,255,255,0.035), transparent 60%),
-      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,255,255,0.04), transparent 60%),
-      radial-gradient(ellipse 80% 50% at 50% 100%, rgba(255,255,255,0.025), transparent 60%),
-      var(--bg);
-    background-attachment: fixed;
-    min-height: 100vh;
-    position: relative;
-  }
-
-  /* Scanlines */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(255,255,255,0.012) 2px,
-      rgba(255,255,255,0.012) 3px
-    );
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  /* Vignette */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  ::selection { background: rgba(255,255,255,0.2); color: #fff; text-shadow: var(--glow); }
-
-  /* Header */
-  header {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.25rem 2rem;
-    z-index: 100;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background: rgba(5, 5, 5, 0.55);
-    border-bottom: 1px solid var(--line);
-  }
-
-  .logo {
-    text-decoration: none;
-    color: var(--fg);
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 800;
-    font-size: 1rem;
-    letter-spacing: 0.22em;
-    text-shadow: var(--glow-soft);
-    cursor: pointer;
-    transition: text-shadow 0.3s ease, letter-spacing 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-
-  .logo .mark {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    background: var(--fg);
-    box-shadow: var(--glow);
-    transform: rotate(45deg);
-    transition: transform 0.4s ease;
-  }
-
-  .logo:hover { text-shadow: var(--glow); letter-spacing: 0.26em; }
-  .logo:hover .mark { transform: rotate(225deg); }
-
-  nav { display: flex; gap: 2.25rem; }
-
-  nav a {
-    color: var(--dim);
-    text-decoration: none;
-    font-size: 0.78rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-    position: relative;
-    padding: 0.25rem 0;
-  }
-
-  nav a::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: -6px;
-    width: 0;
-    height: 1px;
-    background: var(--fg);
-    box-shadow: var(--glow-soft);
-    transition: width 0.3s ease, left 0.3s ease;
-  }
-
-  nav a:hover, nav a.active { color: var(--fg); text-shadow: var(--glow-soft); }
-  nav a:hover::after, nav a.active::after { width: 100%; left: 0; }
-
-  main {
-    padding-top: 4.5rem;
-    min-height: 100vh;
-    position: relative;
-    z-index: 2;
-  }
-
-  /* Page entrance */
-  .fade-in {
-    animation: fadeIn 0.6s ease both;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* HOME */
-  .home {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 4.5rem);
-    text-align: center;
-    padding: 2rem;
-    position: relative;
-  }
-
-  .home h1 {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 900;
-    font-size: clamp(4rem, 17vw, 15rem);
-    letter-spacing: -0.045em;
-    line-height: 0.9;
-    text-shadow:
-      0 0 30px rgba(255,255,255,0.55),
-      0 0 80px rgba(255,255,255,0.3),
-      0 0 140px rgba(255,255,255,0.18);
-    animation: pulse 5s ease-in-out infinite;
-  }
-
-  .home .tag {
-    margin-top: 2.5rem;
-    color: var(--dim);
-    font-size: 0.78rem;
-    letter-spacing: 0.5em;
-    text-transform: uppercase;
-    padding-left: 0.5em;
-  }
-
-  .home .hint {
-    position: absolute;
-    bottom: 2.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--dimmer);
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    animation: blink 2.4s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% {
-      text-shadow:
-        0 0 30px rgba(255,255,255,0.55),
-        0 0 80px rgba(255,255,255,0.3),
-        0 0 140px rgba(255,255,255,0.18);
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Finefit">
+  <meta name="twitter:description" content="Self-taught developer portfolio, projects, socials, and games.">
+  <meta name="twitter:image" content="https://finefit.dev/banner.png">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;700;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050505;
+      --bg-2: #0a0a0a;
+      --fg: #ffffff;
+      --dim: rgba(255, 255, 255, 0.55);
+      --dimmer: rgba(255, 255, 255, 0.22);
+      --line: rgba(255, 255, 255, 0.08);
+      --line-2: rgba(255, 255, 255, 0.16);
+      --glow: 0 0 16px rgba(255, 255, 255, 0.45);
+      --glow-soft: 0 0 8px rgba(255, 255, 255, 0.3);
+      --cursor-x: 50%;
+      --cursor-y: 50%;
     }
-    50% {
-      text-shadow:
-        0 0 45px rgba(255,255,255,0.7),
-        0 0 110px rgba(255,255,255,0.4),
-        0 0 180px rgba(255,255,255,0.22);
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-  }
 
-  @keyframes blink {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 0.9; }
-  }
+    html,
+    body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
 
-  /* PAGE LAYOUT */
-  .page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 5rem 2rem 6rem;
-  }
+    body {
+      background:
+        radial-gradient(circle 600px at var(--cursor-x) var(--cursor-y), rgba(255, 255, 255, 0.035), transparent 60%),
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255, 255, 255, 0.04), transparent 60%),
+        radial-gradient(ellipse 80% 50% at 50% 100%, rgba(255, 255, 255, 0.025), transparent 60%),
+        var(--bg);
+      background-attachment: fixed;
+      min-height: 100vh;
+      position: relative;
+    }
 
-  .page-meta {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: var(--dimmer);
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-  }
-  .page-meta::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--line);
-  }
+    /* Scanlines + vignette */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.012) 2px, rgba(255, 255, 255, 0.012) 3px);
+      pointer-events: none;
+      z-index: 1;
+    }
 
-  .page-title {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 700;
-    font-size: clamp(2.75rem, 7vw, 5.5rem);
-    letter-spacing: -0.03em;
-    text-shadow: var(--glow);
-    margin-bottom: 3.5rem;
-    line-height: 1;
-  }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
 
-  /* PROJECTS */
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-    gap: 1.25rem;
-  }
+    ::selection {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      text-shadow: var(--glow);
+    }
 
-  .project-card {
-    border: 1px solid var(--line);
-    padding: 2rem 1.75rem;
-    background: rgba(255,255,255,0.015);
-    transition: border-color 0.4s ease, background 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    min-height: 220px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: rgba(5, 5, 5, 0.55);
+      border-bottom: 1px solid var(--line);
+    }
 
-  .project-card::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.12), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
-  }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: var(--fg);
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.22em;
+      text-shadow: var(--glow-soft);
+      transition: text-shadow 0.3s ease, letter-spacing 0.3s ease;
+    }
 
-  .project-card:hover {
-    border-color: var(--line-2);
-    background: rgba(255,255,255,0.03);
-    transform: translateY(-3px);
-    box-shadow: var(--glow-soft);
-  }
+    .logo .mark {
+      width: 10px;
+      height: 10px;
+      background: var(--fg);
+      box-shadow: var(--glow);
+      transform: rotate(45deg);
+      transition: transform 0.4s ease;
+    }
 
-  .project-card:hover::before { opacity: 1; }
+    .logo:hover {
+      text-shadow: var(--glow);
+      letter-spacing: 0.26em;
+    }
 
-  .project-card .num {
-    font-size: 0.7rem;
-    color: var(--dimmer);
-    letter-spacing: 0.3em;
-  }
+    .logo:hover .mark {
+      transform: rotate(225deg);
+    }
 
-  .project-card h3 {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-    font-size: 1.25rem;
-    margin: 1.25rem 0 0.75rem;
-    letter-spacing: -0.01em;
-  }
+    nav {
+      display: flex;
+      gap: 2.25rem;
+    }
 
-  .project-card p {
-    color: var(--dim);
-    font-size: 0.8rem;
-    line-height: 1.7;
-  }
+    nav a {
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.25rem 0;
+      position: relative;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
 
-  .project-card .status {
-    margin-top: 1.5rem;
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    color: var(--dimmer);
-    text-transform: uppercase;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+    nav a::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -6px;
+      width: 0;
+      height: 1px;
+      background: var(--fg);
+      box-shadow: var(--glow-soft);
+      transition: width 0.3s ease, left 0.3s ease;
+    }
 
-  .project-card .status::before {
-    content: '';
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--dimmer);
-  }
+    nav a:hover,
+    nav a.active {
+      color: var(--fg);
+      text-shadow: var(--glow-soft);
+    }
 
-  /* SOCIALS */
-  .socials-list {
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid var(--line);
-  }
+    nav a:hover::after,
+    nav a.active::after {
+      width: 100%;
+      left: 0;
+    }
 
-  .social-link {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.75rem 0.5rem;
-    border-bottom: 1px solid var(--line);
-    color: var(--fg);
-    text-decoration: none;
-    transition: padding 0.4s ease, background 0.4s ease;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    font-size: 1.4rem;
-    letter-spacing: 0.02em;
-    position: relative;
-  }
+    main {
+      padding-top: 4.5rem;
+      min-height: 100vh;
+      position: relative;
+      z-index: 2;
+    }
 
-  .social-link .handle {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--dim);
-    margin-left: 1rem;
-    letter-spacing: 0.05em;
-  }
+    .fade-in {
+      animation: fadeIn 0.6s ease both;
+    }
 
-  .social-link .arrow {
-    transition: transform 0.4s ease, text-shadow 0.4s ease;
-    font-size: 1.25rem;
-    color: var(--dim);
-  }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
 
-  .social-link:hover {
-    padding-left: 1.75rem;
-    background: rgba(255,255,255,0.02);
-  }
-  .social-link:hover .arrow { transform: translateX(10px); color: var(--fg); text-shadow: var(--glow-soft); }
-  .social-link:hover { text-shadow: var(--glow-soft); }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-  .social-link .name-wrap {
-    display: inline-flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-  }
+    /* Home */
+    .home {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 4.5rem);
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+    }
 
-  /* GAMES */
-  .games-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    margin-bottom: 2.5rem;
-  }
+    .home h1 {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: clamp(4rem, 17vw, 15rem);
+      letter-spacing: -0.045em;
+      line-height: 0.9;
+      text-shadow:
+        0 0 30px rgba(255, 255, 255, 0.55),
+        0 0 80px rgba(255, 255, 255, 0.3),
+        0 0 140px rgba(255, 255, 255, 0.18);
+      animation: pulse 5s ease-in-out infinite;
+    }
 
-  .game-tab {
-    border: 1px solid var(--line-2);
-    background: rgba(255,255,255,0.02);
-    padding: 0.85rem 1.5rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-family: 'Unbounded', sans-serif;
-    font-size: 0.85rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--fg);
-    text-shadow: var(--glow-soft);
-    width: fit-content;
-  }
-  .game-tab::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    background: var(--fg);
-    box-shadow: var(--glow-soft);
-    border-radius: 50%;
-  }
+    .home .sub {
+      margin-top: 2.25rem;
+      color: var(--fg);
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 300;
+      font-size: clamp(0.85rem, 1.4vw, 1rem);
+      letter-spacing: 0.05em;
+      max-width: 38ch;
+      line-height: 1.6;
+      opacity: 0.85;
+    }
 
-  .game-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-  }
+    .home .tag {
+      margin-top: 1.25rem;
+      color: var(--dim);
+      font-size: 0.72rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      padding-left: 0.45em;
+    }
 
-  .game-info {
-    display: flex;
-    gap: 3.5rem;
-    font-size: 0.72rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--dim);
-  }
+    .home .hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--dimmer);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      animation: blink 2.4s ease-in-out infinite;
+    }
 
-  .game-info b {
-    font-weight: 500;
-    color: var(--fg);
-    text-shadow: var(--glow-soft);
-    margin-left: 0.5rem;
-    font-family: 'Unbounded', sans-serif;
-    font-size: 0.9rem;
-    letter-spacing: 0.05em;
-  }
+    @keyframes pulse {
 
-  .canvas-frame {
-    padding: 0.75rem;
-    border: 1px solid var(--line-2);
-    background: rgba(255,255,255,0.015);
-    box-shadow: var(--glow-soft);
-    position: relative;
-  }
+      0%,
+      100% {
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.55), 0 0 80px rgba(255, 255, 255, 0.3), 0 0 140px rgba(255, 255, 255, 0.18);
+      }
 
-  .canvas-frame::before, .canvas-frame::after {
-    content: '';
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    border-color: var(--fg);
-    border-style: solid;
-  }
-  .canvas-frame::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
-  .canvas-frame::after { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+      50% {
+        text-shadow: 0 0 45px rgba(255, 255, 255, 0.7), 0 0 110px rgba(255, 255, 255, 0.4), 0 0 180px rgba(255, 255, 255, 0.22);
+      }
+    }
 
-  #snake-canvas {
-    background: var(--bg-2);
-    display: block;
-    max-width: 100%;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-  }
+    @keyframes blink {
 
-  .game-instructions {
-    color: var(--dim);
-    font-size: 0.72rem;
-    letter-spacing: 0.2em;
-    text-align: center;
-    text-transform: uppercase;
-  }
+      0%,
+      100% {
+        opacity: 0.4;
+      }
 
-  .game-instructions kbd {
-    border: 1px solid var(--line-2);
-    padding: 0.15rem 0.45rem;
-    border-radius: 3px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    margin: 0 0.15rem;
-    color: var(--fg);
-  }
+      50% {
+        opacity: 0.9;
+      }
+    }
 
-  /* Footer */
-  footer {
-    text-align: center;
-    padding: 3rem 2rem 2rem;
-    color: var(--dimmer);
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    position: relative;
-    z-index: 2;
-  }
+    /* Page shell */
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+    }
 
-  /* Responsive */
-  @media (max-width: 700px) {
-    header { padding: 1rem 1.25rem; }
-    .logo { font-size: 0.85rem; letter-spacing: 0.18em; }
-    nav { gap: 1.25rem; }
-    nav a { font-size: 0.68rem; letter-spacing: 0.15em; }
-    .page { padding: 3.5rem 1.25rem 4rem; }
-    .home .tag { font-size: 0.65rem; letter-spacing: 0.35em; }
-    .social-link { font-size: 1.1rem; padding: 1.4rem 0.5rem; }
-    .social-link .handle { display: block; margin-left: 0; font-size: 0.65rem; margin-top: 0.25rem; }
-    .game-info { gap: 1.75rem; }
-  }
-</style>
+    .page-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--dimmer);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .page-meta::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .page-title {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.75rem, 7vw, 5.5rem);
+      letter-spacing: -0.03em;
+      text-shadow: var(--glow);
+      margin-bottom: 1.5rem;
+      line-height: 1;
+    }
+
+    .page-lede {
+      max-width: 60ch;
+      color: var(--dim);
+      font-size: 0.85rem;
+      line-height: 1.8;
+      margin-bottom: 3.5rem;
+    }
+
+    /* Projects */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.015);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.4s ease, background 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1), transparent 70%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .project-card:hover {
+      border-color: var(--line-2);
+      background: rgba(255, 255, 255, 0.025);
+      transform: translateY(-3px);
+      box-shadow: var(--glow-soft);
+    }
+
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    /* Carousel */
+    .carousel {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: var(--bg-2);
+      margin-bottom: 1.25rem;
+    }
+
+    .carousel-track {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .carousel-slide {
+      flex: 0 0 100%;
+      height: 100%;
+      cursor: zoom-in;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.9);
+      transition: filter 0.3s ease;
+    }
+
+    .carousel-slide:hover img {
+      filter: brightness(1);
+    }
+
+    .carousel-nav {
+      position: absolute;
+      top: 50%;
+      width: 32px;
+      height: 32px;
+      transform: translateY(-50%);
+      background: rgba(5, 5, 5, 0.7);
+      border: 1px solid var(--line-2);
+      color: var(--fg);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      backdrop-filter: blur(4px);
+      transition: background 0.25s ease, border-color 0.25s ease;
+    }
+
+    .carousel-nav:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--fg);
+    }
+
+    .carousel-nav.prev {
+      left: 0.5rem;
+    }
+
+    .carousel-nav.next {
+      right: 0.5rem;
+    }
+
+    .carousel-counter {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.2rem 0.55rem;
+      background: rgba(5, 5, 5, 0.7);
+      border: 1px solid var(--line-2);
+      backdrop-filter: blur(4px);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--dim);
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 0.55rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .dot {
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.3);
+      transition: background 0.25s ease, width 0.25s ease;
+      cursor: pointer;
+      border: 0;
+      padding: 0;
+    }
+
+    .dot.active {
+      background: var(--fg);
+      box-shadow: var(--glow-soft);
+      width: 14px;
+    }
+
+    /* Card body */
+    .project-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-num {
+      font-size: 0.65rem;
+      color: var(--dimmer);
+      letter-spacing: 0.3em;
+    }
+
+    .project-period {
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.18em;
+    }
+
+    .project-card h3 {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 500;
+      font-size: 1.25rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.35rem;
+    }
+
+    .project-role {
+      font-size: 0.7rem;
+      color: var(--dim);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.85rem;
+    }
+
+    .project-desc {
+      color: var(--dim);
+      font-size: 0.8rem;
+      line-height: 1.7;
+      margin-bottom: 1.1rem;
+      flex: 1;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .tag {
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      padding: 0.25rem 0.55rem;
+      border: 1px solid var(--line-2);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .project-status {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      color: var(--dimmer);
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .project-status::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--dim);
+    }
+
+    /* Modal */
+    .image-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 2rem;
+    }
+
+    .image-modal.open {
+      display: flex;
+    }
+
+    .image-modal img {
+      max-width: 95vw;
+      max-height: 90vh;
+      border: 1px solid var(--line-2);
+      box-shadow: var(--glow);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.5rem;
+      background: none;
+      border: 1px solid var(--line-2);
+      color: var(--fg);
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      transition: border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .modal-close:hover {
+      border-color: var(--fg);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .modal-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line-2);
+      color: var(--fg);
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 1rem;
+      backdrop-filter: blur(4px);
+      transition: background 0.25s ease, border-color 0.25s ease;
+    }
+
+    .modal-nav:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--fg);
+    }
+
+    .modal-nav.prev {
+      left: 1.5rem;
+    }
+
+    .modal-nav.next {
+      right: 1.5rem;
+    }
+
+    .modal-counter {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--dim);
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+    }
+
+    /* Socials */
+    .socials-list {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--line);
+    }
+
+    .social-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.75rem 0.5rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--fg);
+      text-decoration: none;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 400;
+      font-size: 1.4rem;
+      letter-spacing: 0.02em;
+      transition: padding 0.4s ease, background 0.4s ease, text-shadow 0.4s ease;
+    }
+
+    .social-link .name-wrap {
+      display: inline-flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+
+    .social-link .handle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--dim);
+      margin-left: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .social-link .arrow {
+      font-size: 1.25rem;
+      color: var(--dim);
+      transition: transform 0.4s ease, color 0.4s ease, text-shadow 0.4s ease;
+    }
+
+    .social-link:hover {
+      padding-left: 1.75rem;
+      background: rgba(255, 255, 255, 0.02);
+      text-shadow: var(--glow-soft);
+    }
+
+    .social-link:hover .arrow {
+      transform: translateX(10px);
+      color: var(--fg);
+      text-shadow: var(--glow-soft);
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 2.5rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.015);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+      width: fit-content;
+    }
+
+    .status-bar .dot-live {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #5cf08e;
+      box-shadow: 0 0 8px rgba(92, 240, 142, 0.7);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    /* Games */
+    .games-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .game-tab {
+      border: 1px solid var(--line-2);
+      background: rgba(255, 255, 255, 0.02);
+      padding: 0.85rem 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg);
+      text-shadow: var(--glow-soft);
+      width: fit-content;
+    }
+
+    .game-tab::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--fg);
+      box-shadow: var(--glow-soft);
+      border-radius: 50%;
+    }
+
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .game-info {
+      display: flex;
+      gap: 3.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .game-info b {
+      font-weight: 500;
+      color: var(--fg);
+      text-shadow: var(--glow-soft);
+      margin-left: 0.5rem;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+    }
+
+    .canvas-frame {
+      padding: 0.75rem;
+      border: 1px solid var(--line-2);
+      background: rgba(255, 255, 255, 0.015);
+      box-shadow: var(--glow-soft);
+      position: relative;
+    }
+
+    .canvas-frame::before,
+    .canvas-frame::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-color: var(--fg);
+      border-style: solid;
+    }
+
+    .canvas-frame::before {
+      top: -1px;
+      left: -1px;
+      border-width: 1px 0 0 1px;
+    }
+
+    .canvas-frame::after {
+      bottom: -1px;
+      right: -1px;
+      border-width: 0 1px 1px 0;
+    }
+
+    #snake-canvas {
+      background: var(--bg-2);
+      display: block;
+      max-width: 100%;
+      image-rendering: pixelated;
+    }
+
+    .game-instructions {
+      color: var(--dim);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .game-instructions kbd {
+      border: 1px solid var(--line-2);
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      margin: 0 0.15rem;
+      color: var(--fg);
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      header {
+        padding: 1rem 1.25rem;
+      }
+
+      .logo {
+        font-size: 0.85rem;
+        letter-spacing: 0.18em;
+      }
+
+      nav {
+        gap: 1.25rem;
+      }
+
+      nav a {
+        font-size: 0.68rem;
+        letter-spacing: 0.15em;
+      }
+
+      .page {
+        padding: 3.5rem 1.25rem 4rem;
+      }
+
+      .home .tag {
+        font-size: 0.65rem;
+        letter-spacing: 0.35em;
+      }
+
+      .social-link {
+        font-size: 1.1rem;
+        padding: 1.4rem 0.5rem;
+      }
+
+      .social-link .handle {
+        display: block;
+        margin-left: 0;
+        font-size: 0.65rem;
+        margin-top: 0.25rem;
+      }
+
+      .game-info {
+        gap: 1.75rem;
+      }
+
+      .modal-nav.prev {
+        left: 0.5rem;
+      }
+
+      .modal-nav.next {
+        right: 0.5rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-  <a href="/" class="logo" data-link aria-label="Finefit home">
-    <span class="mark"></span>
-    <span>FINEFIT</span>
-  </a>
-  <nav id="nav">
-    <a href="/projects" data-link>Projects</a>
-    <a href="/socials" data-link>Socials</a>
-    <a href="/games" data-link>Games</a>
-  </nav>
-</header>
+  <header>
+    <a href="/" class="logo" data-link aria-label="Finefit home">
+      <span class="mark"></span>
+      <span>FINEFIT</span>
+    </a>
+    <nav id="nav">
+      <a href="/projects" data-link>Projects</a>
+      <a href="/socials" data-link>Socials</a>
+      <a href="/games" data-link>Games</a>
+    </nav>
+  </header>
 
-<main id="content"></main>
+  <main id="content"></main>
 
-<script>
-  // ---------- Cursor spotlight ----------
-  document.addEventListener('mousemove', (e) => {
-    document.documentElement.style.setProperty('--cursor-x', e.clientX + 'px');
-    document.documentElement.style.setProperty('--cursor-y', e.clientY + 'px');
-  });
+  <div id="image-modal" class="image-modal">
+    <button class="modal-close" aria-label="Close">×</button>
+    <button class="modal-nav prev" aria-label="Previous">←</button>
+    <img id="modal-image" src="" alt="">
+    <button class="modal-nav next" aria-label="Next">→</button>
+    <div class="modal-counter" id="modal-counter"></div>
+  </div>
 
-  // ---------- Routing ----------
-  const routes = {
-    '/': renderHome,
-    '/projects': renderProjects,
-    '/socials': renderSocials,
-    '/games': renderGames,
-  };
-
-  function getPath() {
-    return window.location.pathname || '/';
-  }
-
-  function navigate(path) {
-    if (getPath() === path) return;
-    // tear down anything page-specific
-    teardown();
-    try {
-      history.pushState({ path }, '', path);
-    } catch (e) {
-      // Sandboxed iframe — pushState may be blocked. Render anyway.
-      window.__finefitPath = path;
-    }
-    render(path);
-  }
-
-  window.addEventListener('popstate', () => render(getPath()));
-
-  // Intercept link clicks for client-side routing
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[data-link]');
-    if (!a) return;
-    e.preventDefault();
-    navigate(a.getAttribute('href'));
-  });
-
-  function render(path) {
-    path = path || window.__finefitPath || getPath();
-    const handler = routes[path] || renderHome;
-    const main = document.getElementById('content');
-    main.classList.remove('fade-in');
-    // re-trigger animation
-    void main.offsetWidth;
-    handler(main);
-    main.classList.add('fade-in');
-
-    // active nav
-    document.querySelectorAll('#nav a').forEach((a) => {
-      a.classList.toggle('active', a.getAttribute('href') === path);
+  <script>
+    // ---------- Cursor spotlight ----------
+    document.addEventListener('mousemove', (e) => {
+      document.documentElement.style.setProperty('--cursor-x', e.clientX + 'px');
+      document.documentElement.style.setProperty('--cursor-y', e.clientY + 'px');
     });
-    // page title
-    const titles = { '/': 'Finefit', '/projects': 'Projects · Finefit', '/socials': 'Socials · Finefit', '/games': 'Games · Finefit' };
-    document.title = titles[path] || 'Finefit';
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }
 
-  function teardown() {
-    if (window._snake && window._snake.stop) window._snake.stop();
-  }
-
-  // ---------- Pages ----------
-  function renderHome(root) {
-    root.innerHTML = `
-      <section class="home">
-        <h1>FINEFIT</h1>
-        <p class="tag">design · build · play</p>
-        <p class="hint">scroll down or pick a tab</p>
-      </section>
-    `;
-  }
-
-  function renderProjects(root) {
+    // ---------- Data ----------
     const projects = [
-      { num: '01', title: 'Project One', desc: 'Placeholder card — drop in your first project here.', status: 'In progress' },
-      { num: '02', title: 'Project Two', desc: 'Another placeholder. Add a title, description, and link.', status: 'Coming soon' },
-      { num: '03', title: 'Project Three', desc: 'Reserved slot. Swap this out whenever you are ready.', status: 'Coming soon' },
+      {
+        num: '01',
+        title: 'Datapacks',
+        period: '2019',
+        role: 'First public projects, age 15',
+        desc: 'Three Minecraft datapacks released to the community. ~1,900 downloads total. My first taste of shipping something other people actually used.',
+        tags: ['mcfunction', 'JSON', 'Minecraft'],
+        images: ['images/datapack1.png', 'images/datapack2.png', 'images/datapack3.png'],
+        status: '3 projects · ~1,900 downloads',
+      },
+      {
+        num: '02',
+        title: 'Plugins & Bots',
+        period: '2020 – 2021',
+        role: 'Server tooling and side projects',
+        desc: 'Spigot plugins and Discord bots for small communities. Got serious about touch-typing on the side — 100+ WPM became routine.',
+        tags: ['Java', 'Python', 'Discord.py'],
+        images: ['images/plugin1.png', 'images/plugin2.png', 'images/plugin3.png'],
+        status: 'Typing 100+ WPM',
+      },
+      {
+        num: '03',
+        title: 'The Gap',
+        period: '2022 – 2024',
+        role: 'Working full-time, learning on the side',
+        desc: 'Labor jobs paid the bills. Coding lived in evenings — picking up Python, writing small scripts, keeping the habit warm.',
+        tags: ['Python'],
+        images: ['images/gap1.png', 'images/gap2.png', 'images/gap3.png'],
+        status: 'Intro to Python',
+      },
     ];
 
-    root.innerHTML = `
-      <section class="page">
-        <div class="page-meta">
-          <span>/ projects</span>
-        </div>
-        <h2 class="page-title">Projects</h2>
-        <div class="projects-grid">
-          ${projects.map(p => `
-            <article class="project-card">
-              <div>
-                <div class="num">${p.num}</div>
-                <h3>${p.title}</h3>
-                <p>${p.desc}</p>
-              </div>
-              <span class="status">${p.status}</span>
-            </article>
-          `).join('')}
-        </div>
-      </section>
-    `;
-  }
-
-  function renderSocials(root) {
     const socials = [
-      { name: 'GitHub',    handle: '@finefit',   url: '#' },
-      { name: 'Twitter',   handle: '@finefit',   url: '#' },
-      { name: 'YouTube',   handle: '/finefit',   url: '#' },
-      { name: 'Discord',   handle: 'finefit',    url: '#' },
-      { name: 'Email',     handle: 'hello@finefit.dev', url: 'mailto:hello@finefit.dev' },
+      { name: 'GitHub', handle: '@finefitdev', url: 'https://github.com/finefitdev' },
+      { name: 'Email', handle: 'hello@finefit.dev', url: 'mailto:hello@finefit.dev' },
+      { name: 'Discord', handle: 'finefit', url: 'https://discord.com/' },
     ];
 
-    root.innerHTML = `
-      <section class="page">
-        <div class="page-meta">
-          <span>/ socials</span>
-        </div>
-        <h2 class="page-title">Socials</h2>
-        <div class="socials-list">
-          ${socials.map(s => `
-            <a href="${s.url}" class="social-link" target="_blank" rel="noopener">
-              <span class="name-wrap">
-                <span>${s.name}</span>
-                <span class="handle">${s.handle}</span>
-              </span>
-              <span class="arrow">→</span>
-            </a>
-          `).join('')}
-        </div>
-      </section>
-    `;
-  }
+    // Per-project carousel state
+    const carouselIdx = {};
 
-  function renderGames(root) {
-    root.innerHTML = `
-      <section class="page">
-        <div class="page-meta">
-          <span>/ games</span>
-        </div>
-        <h2 class="page-title">Games</h2>
-        <div class="games-list">
-          <div class="game-tab">Snake · Now Playing</div>
-        </div>
-        <div class="game-container">
-          <div class="game-info">
-            <div>Score<b id="snake-score">0</b></div>
-            <div>Best<b id="snake-best">0</b></div>
-          </div>
-          <div class="canvas-frame">
-            <canvas id="snake-canvas" width="440" height="440" aria-label="Snake game"></canvas>
-          </div>
-          <p class="game-instructions">
-            <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> or <kbd>WASD</kbd> to move &nbsp;·&nbsp; <kbd>space</kbd> to restart
-          </p>
-        </div>
-      </section>
-    `;
-    initSnake();
-  }
+    // ---------- Routing ----------
+    const routes = {
+      '/': renderHome,
+      '/projects': renderProjects,
+      '/socials': renderSocials,
+      '/games': renderGames,
+    };
 
-  // ---------- Snake game ----------
-  function initSnake() {
-    const canvas = document.getElementById('snake-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const gridSize = 22;
-    const cellSize = canvas.width / gridSize;
+    const getPath = () => window.location.pathname || '/';
 
-    let snake, dir, nextDir, food, score, gameOver, lastStep, speed, running, best;
-    best = 0;
-    const bestEl = document.getElementById('snake-best');
-    const scoreEl = document.getElementById('snake-score');
-    bestEl.textContent = best;
-
-    function reset() {
-      snake = [{x: 11, y: 11}, {x: 10, y: 11}, {x: 9, y: 11}];
-      dir = {x: 1, y: 0};
-      nextDir = {x: 1, y: 0};
-      score = 0;
-      gameOver = false;
-      speed = 130;
-      placeFood();
-      updateScore();
+    function navigate(path) {
+      if (getPath() === path) return;
+      teardown();
+      try { history.pushState({ path }, '', path); }
+      catch { window.__finefitPath = path; }
+      render(path);
     }
 
-    function placeFood() {
-      while (true) {
-        food = { x: Math.floor(Math.random() * gridSize), y: Math.floor(Math.random() * gridSize) };
-        if (!snake.some(s => s.x === food.x && s.y === food.y)) break;
-      }
-    }
+    window.addEventListener('popstate', () => render(getPath()));
 
-    function updateScore() {
-      scoreEl.textContent = score;
-      if (score > best) {
-        best = score;
-        bestEl.textContent = best;
-      }
-    }
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a[data-link]');
+      if (!a) return;
+      e.preventDefault();
+      navigate(a.getAttribute('href'));
+    });
 
-    function step() {
-      if (gameOver) return;
-      dir = nextDir;
-      const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
-      if (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize || snake.some(s => s.x === head.x && s.y === head.y)) {
-        gameOver = true;
-        draw();
-        return;
-      }
-      snake.unshift(head);
-      if (head.x === food.x && head.y === food.y) {
-        score++;
-        updateScore();
-        placeFood();
-        if (speed > 65) speed -= 2.5;
-      } else {
-        snake.pop();
-      }
-      draw();
-    }
+    function render(path) {
+      path = path || window.__finefitPath || getPath();
+      const handler = routes[path] || render404;
+      const main = document.getElementById('content');
+      main.classList.remove('fade-in');
+      void main.offsetWidth;
+      handler(main);
+      main.classList.add('fade-in');
 
-    function draw() {
-      // background
-      ctx.fillStyle = '#0a0a0a';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // grid
-      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-      ctx.lineWidth = 1;
-      for (let i = 1; i < gridSize; i++) {
-        ctx.beginPath();
-        ctx.moveTo(i * cellSize + 0.5, 0);
-        ctx.lineTo(i * cellSize + 0.5, canvas.height);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(0, i * cellSize + 0.5);
-        ctx.lineTo(canvas.width, i * cellSize + 0.5);
-        ctx.stroke();
-      }
-
-      // food (glowing dot)
-      ctx.shadowBlur = 22;
-      ctx.shadowColor = 'rgba(255,255,255,0.9)';
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(
-        food.x * cellSize + cellSize / 2,
-        food.y * cellSize + cellSize / 2,
-        cellSize / 3.2,
-        0, Math.PI * 2
-      );
-      ctx.fill();
-
-      // snake
-      snake.forEach((s, i) => {
-        const isHead = i === 0;
-        ctx.shadowBlur = isHead ? 22 : 10;
-        ctx.shadowColor = 'rgba(255,255,255,0.7)';
-        const alpha = isHead ? 1 : Math.max(0.45, 1 - (i / snake.length) * 0.55);
-        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-        const pad = isHead ? 1 : 2;
-        ctx.fillRect(
-          s.x * cellSize + pad,
-          s.y * cellSize + pad,
-          cellSize - pad * 2,
-          cellSize - pad * 2
-        );
+      document.querySelectorAll('#nav a').forEach((a) => {
+        a.classList.toggle('active', a.getAttribute('href') === path);
       });
-      ctx.shadowBlur = 0;
+      const titles = {
+        '/': 'Finefit',
+        '/projects': 'Projects · Finefit',
+        '/socials': 'Socials · Finefit',
+        '/games': 'Games · Finefit',
+      };
+      document.title = titles[path] || 'Finefit';
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
 
-      if (gameOver) {
-        ctx.fillStyle = 'rgba(0,0,0,0.72)';
+    function teardown() {
+      if (window._snake?.stop) window._snake.stop();
+    }
+
+    // ---------- Pages ----------
+    function renderHome(root) {
+      root.innerHTML = `
+        <section class="home">
+          <h1>Welcome</h1>
+          <p class="sub">Self-taught developer. Shipping code since 2019, working with what I can teach myself.</p>
+          <p class="tag">Look around</p>
+          <p class="hint">.... or pick a tab</p>
+        </section>
+      `;
+    }
+
+    function renderProjects(root) {
+      root.innerHTML = `
+        <section class="page">
+          <div class="page-meta"><span>/ projects</span></div>
+          <h2 class="page-title">Projects</h2>
+          <p class="page-lede">A rough timeline of what I've built and where my time went. Some shipped to the public, some lived in evenings between shifts. Either way, this is the work.</p>
+          <div class="projects-grid">
+            ${projects.map((p, i) => projectCard(p, i)).join('')}
+          </div>
+        </section>
+      `;
+      projects.forEach((_, i) => (carouselIdx[i] = 0));
+      bindCarousels();
+    }
+
+    function projectCard(p, i) {
+      const slides = p.images.map((src, j) => `
+        <div class="carousel-slide" data-open="${i}:${j}">
+          <img src="${src}" alt="${p.title} — image ${j + 1}" loading="lazy">
+        </div>
+      `).join('');
+
+      const dots = p.images.map((_, j) => `
+        <button class="dot ${j === 0 ? 'active' : ''}" data-go="${i}:${j}" aria-label="Image ${j + 1}"></button>
+      `).join('');
+
+      return `
+        <article class="project-card" data-project="${i}">
+          <div class="carousel">
+            <div class="carousel-track" data-track="${i}">${slides}</div>
+            ${p.images.length > 1 ? `
+              <button class="carousel-nav prev" data-step="${i}:-1" aria-label="Previous image">‹</button>
+              <button class="carousel-nav next" data-step="${i}:1" aria-label="Next image">›</button>
+              <div class="carousel-counter" data-counter="${i}">1 / ${p.images.length}</div>
+              <div class="carousel-dots">${dots}</div>
+            ` : ''}
+          </div>
+
+          <div class="project-head">
+            <span class="project-num">${p.num}</span>
+            <span class="project-period">${p.period}</span>
+          </div>
+          <h3>${p.title}</h3>
+          <p class="project-role">${p.role}</p>
+          <p class="project-desc">${p.desc}</p>
+          <div class="project-tags">${p.tags.map((t) => `<span class="tag">${t}</span>`).join('')}</div>
+          <span class="project-status">${p.status}</span>
+        </article>
+      `;
+    }
+
+    function bindCarousels() {
+      document.querySelectorAll('[data-step]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const [i, step] = btn.dataset.step.split(':').map(Number);
+          moveCarousel(i, step);
+        });
+      });
+      document.querySelectorAll('[data-go]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const [i, j] = btn.dataset.go.split(':').map(Number);
+          setCarousel(i, j);
+        });
+      });
+      document.querySelectorAll('[data-open]').forEach((slide) => {
+        slide.addEventListener('click', () => {
+          const [i, j] = slide.dataset.open.split(':').map(Number);
+          openModal(i, j);
+        });
+      });
+    }
+
+    function moveCarousel(i, step) {
+      const total = projects[i].images.length;
+      const next = (carouselIdx[i] + step + total) % total;
+      setCarousel(i, next);
+    }
+
+    function setCarousel(i, j) {
+      carouselIdx[i] = j;
+      const total = projects[i].images.length;
+      const track = document.querySelector(`[data-track="${i}"]`);
+      if (track) track.style.transform = `translateX(-${j * 100}%)`;
+
+      document
+        .querySelector(`[data-project="${i}"]`)
+        ?.querySelectorAll('.dot')
+        .forEach((d, k) => d.classList.toggle('active', k === j));
+
+      const counter = document.querySelector(`[data-counter="${i}"]`);
+      if (counter) counter.textContent = `${j + 1} / ${total}`;
+    }
+
+    function renderSocials(root) {
+      root.innerHTML = `
+        <section class="page">
+          <div class="page-meta"><span>/ socials</span></div>
+          <h2 class="page-title">Socials</h2>
+          <p class="page-lede">The fastest ways to reach me. Email's best for anything work-related.</p>
+          <div class="socials-list">
+            ${socials.map((s) => `
+              <a href="${s.url}" class="social-link" target="_blank" rel="noopener">
+                <span class="name-wrap">
+                  <span>${s.name}</span>
+                  <span class="handle">${s.handle}</span>
+                </span>
+                <span class="arrow">→</span>
+              </a>
+            `).join('')}
+          </div>
+          <div class="status-bar">
+            <span class="dot-live"></span>
+            <span>Open to opportunities · Wisconsin / Remote</span>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderGames(root) {
+      root.innerHTML = `
+        <section class="page">
+          <div class="page-meta"><span>/ games</span></div>
+          <h2 class="page-title">Games</h2>
+          <p class="page-lede">A break from the resume. Built from scratch — vanilla canvas, no libraries.</p>
+          <div class="games-list">
+            <div class="game-tab">Snake · Now Playing</div>
+          </div>
+          <div class="game-container">
+            <div class="game-info">
+              <div>Score<b id="snake-score">0</b></div>
+              <div>Best<b id="snake-best">0</b></div>
+            </div>
+            <div class="canvas-frame">
+              <canvas id="snake-canvas" width="440" height="440" aria-label="Snake game"></canvas>
+            </div>
+            <p class="game-instructions">
+              <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> or <kbd>WASD</kbd> to move &nbsp;·&nbsp; <kbd>space</kbd> to restart
+            </p>
+          </div>
+        </section>
+      `;
+      initSnake();
+    }
+
+    function render404(root) {
+      root.innerHTML = `
+    <section class="page">
+      <div class="page-meta"><span>/ 404</span></div>
+      <h2 class="page-title">Lost</h2>
+      <p class="page-lede">
+        The page you requested doesn't exist.
+      </p>
+
+      <a href="/" data-link class="social-link">
+        <span class="name-wrap">
+          <span>Return Home</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </section>
+  `;
+    }
+
+    // ---------- Modal ----------
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-image');
+    const modalCounter = document.getElementById('modal-counter');
+    let modalState = { i: 0, j: 0 };
+
+    function openModal(i, j) {
+      modalState = { i, j };
+      updateModal();
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function modalStep(delta) {
+      const total = projects[modalState.i].images.length;
+      modalState.j = (modalState.j + delta + total) % total;
+      updateModal();
+      // sync card carousel underneath
+      setCarousel(modalState.i, modalState.j);
+    }
+
+    function updateModal() {
+      const p = projects[modalState.i];
+      modalImg.src = p.images[modalState.j];
+      modalImg.alt = `${p.title} — image ${modalState.j + 1}`;
+      modalCounter.textContent = `${modalState.j + 1} / ${p.images.length}`;
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+    modal.querySelector('.modal-close').addEventListener('click', closeModal);
+    modal.querySelector('.modal-nav.prev').addEventListener('click', () => modalStep(-1));
+    modal.querySelector('.modal-nav.next').addEventListener('click', () => modalStep(1));
+
+    document.addEventListener('keydown', (e) => {
+      if (!modal.classList.contains('open')) return;
+      if (e.key === 'Escape') closeModal();
+      else if (e.key === 'ArrowLeft') modalStep(-1);
+      else if (e.key === 'ArrowRight') modalStep(1);
+    });
+
+    // ---------- Snake ----------
+    function initSnake() {
+      const canvas = document.getElementById('snake-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const gridSize = 22;
+      const cellSize = canvas.width / gridSize;
+
+      let snake, dir, nextDir, food, score, gameOver, lastStep, speed, running;
+      let best = 0;
+      const bestEl = document.getElementById('snake-best');
+      const scoreEl = document.getElementById('snake-score');
+      bestEl.textContent = best;
+
+      function reset() {
+        snake = [{ x: 11, y: 11 }, { x: 10, y: 11 }, { x: 9, y: 11 }];
+        dir = { x: 1, y: 0 };
+        nextDir = { x: 1, y: 0 };
+        score = 0;
+        gameOver = false;
+        speed = 130;
+        placeFood();
+        updateScore();
+      }
+
+      function placeFood() {
+        while (true) {
+          food = { x: Math.floor(Math.random() * gridSize), y: Math.floor(Math.random() * gridSize) };
+          if (!snake.some(s => s.x === food.x && s.y === food.y)) break;
+        }
+      }
+
+      function updateScore() {
+        scoreEl.textContent = score;
+        if (score > best) { best = score; bestEl.textContent = best; }
+      }
+
+      function step() {
+        if (gameOver) return;
+        dir = nextDir;
+        const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+        if (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize
+          || snake.some(s => s.x === head.x && s.y === head.y)) {
+          gameOver = true;
+          draw();
+          return;
+        }
+        snake.unshift(head);
+        if (head.x === food.x && head.y === food.y) {
+          score++;
+          updateScore();
+          placeFood();
+          if (speed > 65) speed -= 2.5;
+        } else {
+          snake.pop();
+        }
+        draw();
+      }
+
+      function draw() {
+        ctx.fillStyle = '#0a0a0a';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.shadowBlur = 24;
-        ctx.shadowColor = 'rgba(255,255,255,0.8)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+        ctx.lineWidth = 1;
+        for (let i = 1; i < gridSize; i++) {
+          ctx.beginPath();
+          ctx.moveTo(i * cellSize + 0.5, 0);
+          ctx.lineTo(i * cellSize + 0.5, canvas.height);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, i * cellSize + 0.5);
+          ctx.lineTo(canvas.width, i * cellSize + 0.5);
+          ctx.stroke();
+        }
+
+        ctx.shadowBlur = 22;
+        ctx.shadowColor = 'rgba(255,255,255,0.9)';
         ctx.fillStyle = '#ffffff';
-        ctx.textAlign = 'center';
-        ctx.font = '700 26px Unbounded, sans-serif';
-        ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 8);
+        ctx.beginPath();
+        ctx.arc(food.x * cellSize + cellSize / 2, food.y * cellSize + cellSize / 2, cellSize / 3.2, 0, Math.PI * 2);
+        ctx.fill();
 
+        snake.forEach((s, i) => {
+          const isHead = i === 0;
+          ctx.shadowBlur = isHead ? 22 : 10;
+          ctx.shadowColor = 'rgba(255,255,255,0.7)';
+          const alpha = isHead ? 1 : Math.max(0.45, 1 - (i / snake.length) * 0.55);
+          ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+          const pad = isHead ? 1 : 2;
+          ctx.fillRect(s.x * cellSize + pad, s.y * cellSize + pad, cellSize - pad * 2, cellSize - pad * 2);
+        });
         ctx.shadowBlur = 0;
-        ctx.fillStyle = 'rgba(255,255,255,0.65)';
-        ctx.font = '11px JetBrains Mono, monospace';
-        ctx.fillText(`SCORE  ${score}      BEST  ${best}`, canvas.width / 2, canvas.height / 2 + 18);
-        ctx.fillStyle = 'rgba(255,255,255,0.45)';
-        ctx.fillText('PRESS SPACE TO RESTART', canvas.width / 2, canvas.height / 2 + 42);
-      }
-    }
 
-    function loop(t) {
-      if (!running) return;
-      if (!lastStep) lastStep = t;
-      if (t - lastStep > speed) {
-        step();
-        lastStep = t;
+        if (gameOver) {
+          ctx.fillStyle = 'rgba(0,0,0,0.72)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.shadowBlur = 24;
+          ctx.shadowColor = 'rgba(255,255,255,0.8)';
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.font = '700 26px Unbounded, sans-serif';
+          ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 8);
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = 'rgba(255,255,255,0.65)';
+          ctx.font = '11px JetBrains Mono, monospace';
+          ctx.fillText(`SCORE  ${score}      BEST  ${best}`, canvas.width / 2, canvas.height / 2 + 18);
+          ctx.fillStyle = 'rgba(255,255,255,0.45)';
+          ctx.fillText('PRESS SPACE TO RESTART', canvas.width / 2, canvas.height / 2 + 42);
+        }
       }
+
+      function loop(t) {
+        if (!running) return;
+        if (!lastStep) lastStep = t;
+        if (t - lastStep > speed) { step(); lastStep = t; }
+        requestAnimationFrame(loop);
+      }
+
+      function onKey(e) {
+        if (getPath() !== '/games') return;
+        const k = e.key.toLowerCase();
+        const map = {
+          'arrowup': { x: 0, y: -1 },
+          'w': { x: 0, y: -1 },
+          'arrowdown': { x: 0, y: 1 },
+          's': { x: 0, y: 1 },
+          'arrowleft': { x: -1, y: 0 },
+          'a': { x: -1, y: 0 },
+          'arrowright': { x: 1, y: 0 },
+          'd': { x: 1, y: 0 },
+        };
+        if (map[k]) {
+          const nd = map[k];
+          if (nd.x !== -dir.x || nd.y !== -dir.y) nextDir = nd;
+          e.preventDefault();
+        } else if (k === ' ') {
+          if (gameOver) reset();
+          e.preventDefault();
+        }
+      }
+
+      document.addEventListener('keydown', onKey);
+      window._snake = {
+        stop() { running = false; document.removeEventListener('keydown', onKey); }
+      };
+
+      reset();
+      draw();
+      running = true;
       requestAnimationFrame(loop);
     }
 
-    function onKey(e) {
-      if (getPath() !== '/games') return;
-      const k = e.key.toLowerCase();
-      const map = {
-        'arrowup':    {x: 0, y: -1},
-        'w':          {x: 0, y: -1},
-        'arrowdown':  {x: 0, y: 1},
-        's':          {x: 0, y: 1},
-        'arrowleft':  {x: -1, y: 0},
-        'a':          {x: -1, y: 0},
-        'arrowright': {x: 1, y: 0},
-        'd':          {x: 1, y: 0},
-      };
-      if (map[k]) {
-        const nd = map[k];
-        // prevent 180 turns
-        if (nd.x !== -dir.x || nd.y !== -dir.y) nextDir = nd;
-        e.preventDefault();
-      } else if (k === ' ' || e.key === ' ') {
-        if (gameOver) reset();
-        e.preventDefault();
-      }
-    }
-
-    document.addEventListener('keydown', onKey);
-
-    window._snake = {
-      stop() {
-        running = false;
-        document.removeEventListener('keydown', onKey);
-      }
-    };
-
-    reset();
-    draw();
-    running = true;
-    requestAnimationFrame(loop);
-  }
-
-  // ---------- Boot ----------
-  render(getPath());
-</script>
-
+    // ---------- Boot ----------
+    render(getPath());
+  </script>
 </body>
+
 </html>
